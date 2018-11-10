@@ -1,18 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"os"
 )
 
-//HexRecord defines strcure of a line in HexDump.
+//HexRecord defines strcture of a line in HexDump.
 type HexRecord struct {
-	byteCount  int8
-	offset     int16
-	recordType int8
+	byteCount  uint8
+	offset     uint16
+	recordType uint8
 	data       []byte
 	checksum   byte
-	linearAddr int32
+	linearAddr uint32
 }
 
 //HexFormat is an iterface for pasring hexdumps.
@@ -28,11 +27,13 @@ func (hxfmt *HexFormat) Parse() bool {
 }
 
 // Dump dumps content to outfile.
-func (hxfmt *HexFormat) Dump() int32 {
+/* func (hxfmt *HexFormat) Dump() int32 {
 	var preRecord HexRecord
 	writer := bufio.NewWriter(hxfmt.output)
 	contentLength := 0
 	for record := range hxfmt.records {
 
 	}
+	return
 }
+*/

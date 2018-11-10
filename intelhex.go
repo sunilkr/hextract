@@ -7,11 +7,13 @@ import (
 	"strconv"
 )
 
+//IntelHex : derivation of HexFormat
 type IntelHex HexFormat
 
+//Parse : Parse IntelHex file.
 func (ihex *IntelHex) Parse() bool {
 	scanner := bufio.NewScanner(ihex.input)
-	var segmentAddr int32
+	//var segmentAddr int32
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -31,27 +33,27 @@ func (ihex *IntelHex) Parse() bool {
 		record := &HexRecord{}
 
 		bValue := line[1:3]
-		iTemp, err := strconv.ParseInt(bValue, 16, 8)
-		if err != nil {
-			record.byteCount = int8(iTemp)
+		iTemp, err := strconv.ParseUint(bValue, 16, 8)
+		if err == nil {
+			record.byteCount = uint8(iTemp)
 		} else {
 			fmt.Println("WARN: Skipped; Hex (", bValue, ") is not a valid record size in line:", line)
 			continue
 		}
 
 		bValue = line[3:7]
-		iTemp, err = strconv.ParseInt(bValue, 16, 16)
-		if err != nil {
-			record.offset = int16(iTemp)
+		iTemp, err = strconv.ParseUint(bValue, 16, 16)
+		if err == nil {
+			record.offset = uint16(iTemp)
 		} else {
 			fmt.Println("WARN: Skipped; Hex (", bValue, ") is not a valid record offset in line:", line, ". Err:", err)
 			continue
 		}
 
 		bValue = line[7:9]
-		iTemp, err = strconv.ParseInt(bValue, 16, 16)
-		if err != nil {
-			record.recordType = int8(iTemp)
+		iTemp, err = strconv.ParseUint(bValue, 16, 8)
+		if err == nil {
+			record.recordType = uint8(iTemp)
 		} else {
 			fmt.Println("WARN: Skipped; Hex (", bValue, ") is not a valid record type in line:", line, ". Err:", err)
 			continue
@@ -59,7 +61,7 @@ func (ihex *IntelHex) Parse() bool {
 
 		bValue = line[(lineLength - 2):lineLength]
 		bCheck, err := hex.DecodeString(bValue)
-		if err != nil {
+		if err == nil {
 			record.checksum = bCheck[0]
 		} else {
 			fmt.Println("WARN:", bValue, "is not a valid checksum. Err:", err)
