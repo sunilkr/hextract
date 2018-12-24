@@ -48,4 +48,9 @@ func main() {
 	for record := range iHexParser.records {
 		fmt.Printf("%+v\n", *(iHexParser.records[record]))
 	}
+
+	iHexParser.Dump()
+	for addr, data := range iHexParser.buffers {
+		fmt.Printf("%8x : %v\n", addr, data)
+	}
 }
