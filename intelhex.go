@@ -7,6 +7,32 @@ import (
 	"strconv"
 )
 
+//RecordType : valid record types
+type RecordType uint8
+
+//RecordType : valid record types
+const (
+	DATA RecordType = iota
+	EOF
+	EXTSEGMENT
+	EXTLINEAR
+	STARTLINEAR
+)
+
+//RecordTypes : name of record types
+var RecordTypes = [...]string{
+	"DATA",
+	"EOF",
+	"EXTENDED_SEGMENT_ADDR",
+	"EXTENDED_LINEAR_ADDR",
+	"START_LINEAR_ADDR",
+}
+
+// String : string representation for RecordTypes
+func (rType RecordType) String() string {
+	return RecordTypes[rType]
+}
+
 //IntelHex : derivation of HexFormat
 type IntelHex HexFormat
 
@@ -14,10 +40,10 @@ type IntelHex HexFormat
 func (ihex *IntelHex) Parse() bool {
 	scanner := bufio.NewScanner(ihex.input)
 	//var segmentAddr int32
+	var lineNumber uint
 
 	for scanner.Scan() {
 		line := scanner.Text()
-
 		lineLength := len(line)
 
 		if lineLength <= 10 {
@@ -31,6 +57,8 @@ func (ihex *IntelHex) Parse() bool {
 		}
 
 		record := &HexRecord{}
+		record.lineNumber = lineNumber
+		lineNumber++
 
 		bValue := line[1:3]
 		iTemp, err := strconv.ParseUint(bValue, 16, 8)

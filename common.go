@@ -12,6 +12,7 @@ type HexRecord struct {
 	data       []byte
 	checksum   byte
 	linearAddr uint32
+	lineNumber uint
 }
 
 //HexFormat is an iterface for pasring hexdumps.

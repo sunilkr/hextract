@@ -12,7 +12,7 @@ func main() {
 	var outFile string
 	flag.StringVar(&outFile, "o", "dump.bin", "File to dump extracted data.")
 	var hexFormat string
-	flag.StringVar(&hexFormat, "f", "INTEL", "Format of data. Must be INTEL/MOTO/TEX.")
+	flag.StringVar(&hexFormat, "f", "INTEL", "Format of data. Must be INTEL/MOTO/TEKT.")
 	fmt.Println(os.Args)
 	flag.Parse()
 	inputFile := flag.Args()[0]
