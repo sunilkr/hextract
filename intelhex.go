@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 	"strconv"
@@ -118,4 +119,31 @@ func (ihex *IntelHex) Parse() bool {
 		ihex.records = append(ihex.records, record)
 	}
 	return true
+}
+
+// Dump : Dump parsed records
+func (ihex *IntelHex) Dump() int {
+	var segmentAddr uint32
+	var linearAddr uint32
+	var finalAddr uint32
+	ihex.buffers = make(map[uint32][]byte)
+
+	for _, record := range ihex.records {
+		//Extended segment address record
+		if record.recordType == 2 {
+			segmentAddr = uint32(binary.BigEndian.Uint16(record.data))
+			segmentAddr = segmentAddr * 16
+		}
+		// Linear address record
+		if record.recordType == 4 {
+			linearAddr = uint32(binary.BigEndian.Uint16(record.data))
+			linearAddr = linearAddr << 16
+		}
+		// Data record
+		if record.recordType == 0 {
+			finalAddr = linearAddr + segmentAddr + uint32(record.offset)
+			ihex.buffers[finalAddr] = record.data
+		}
+	}
+	return len(ihex.buffers)
 }

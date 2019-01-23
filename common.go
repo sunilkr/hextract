@@ -19,6 +19,7 @@ type HexRecord struct {
 type HexFormat struct {
 	input   *os.File
 	output  *os.File
+	buffers map[uint32][]byte
 	records []*HexRecord
 }
 
